@@ -1,0 +1,18 @@
+[Unit]
+Description=Farabi Atlas independent local map laboratory
+After=network.target
+
+[Service]
+Type=simple
+User=ata
+WorkingDirectory=/home/ata/farabi/tahtaatlasfarabi
+Environment=ATLAS_STANDALONE=1
+Environment=ATLAS_DB=/home/ata/farabi/tahtaatlasfarabi/var/atlas.db
+ExecStart=/home/ata/farabi/tahtaatlasfarabi/.venv/bin/uvicorn backend.server:standalone --factory --host 0.0.0.0 --port 8099
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

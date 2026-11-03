@@ -1,0 +1,43 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+const browser=await chromium.launch({executablePath:'/usr/bin/chromium-browser',headless:true,args:['--no-sandbox']});
+try {
+ const page=await browser.newPage({viewport:{width:1440,height:900}});
+ await page.goto('http://192.168.23.20:8099/kure/');
+ await page.locator('.ocean-sphere').waitFor();
+ await page.locator('#turkey').click();
+ const province=page.locator('.target.kind-province').filter({has:page.locator('title', {hasText:/^Ankara$/})});
+ const box=()=>province.evaluate(n=>{const b=n.getBBox();return {x:b.x+b.width/2,y:b.y+b.height/2,w:b.width};});
+ const start=await box(), map=await page.locator('.safe-map').boundingBox();
+ await page.mouse.move(map.x+start.x,map.y+start.y);
+ await page.mouse.wheel(0,-120);
+ await page.waitForTimeout(150);
+ const zoomed=await box();
+ assert.ok(zoomed.w>start.w*1.2);
+ assert.ok(Math.hypot(zoomed.x-start.x,zoomed.y-start.y)<1,'Cursor anchor drifted');
+ await page.mouse.wheel(0,120);await page.waitForTimeout(150);
+ const restored=await box();
+ assert.ok(Math.abs(restored.w-start.w)<.1);
+ assert.ok(Math.hypot(restored.x-start.x,restored.y-start.y)<1);
+ await page.mouse.down();await page.mouse.move(map.x+start.x+80,map.y+start.y+50,{steps:5});await page.mouse.up();
+ const dragged=await box();assert.ok(Math.abs(dragged.x-start.x-80)<1);
+ await page.mouse.wheel(0,-120);await page.waitForTimeout(150);
+ await page.mouse.wheel(0,120);await page.waitForTimeout(150);
+ const back=await box();assert.ok(Math.hypot(back.x-dragged.x,back.y-dragged.y)<1);
+ await page.locator('#reset').click();
+ const reset=await box();assert.ok(Math.hypot(reset.x-start.x,reset.y-start.y)<1);
+ await page.locator('#zoom-in').click();assert.ok((await box()).w>start.w*1.3);
+ await page.locator('#zoom-out').click();assert.ok(Math.abs((await box()).w-start.w)<.1);
+ await page.mouse.move(map.x+start.x,map.y+start.y);
+ for(let i=0;i<20;i++){await page.mouse.wheel(0,240);await page.waitForTimeout(60);}
+ const min=await box();assert.ok(min.w/start.w<.1,'Turkey must zoom out beyond regional view');
+ await page.mouse.wheel(0,-120);await page.waitForTimeout(150);
+ assert.ok((await box()).w>min.w*1.2,'Zoom stuck at lower limit');
+ await page.locator('#reset').click();
+ for(let i=0;i<12;i++)await page.locator('#zoom-out').click();
+ assert.ok((await box()).w/start.w<.1,'Minus button must zoom out to world scale');
+ await page.screenshot({path:'test-results/turkey-zoom-out-after.png'});
+ for(let i=0;i<8;i++)await page.locator('#zoom-in').click();
+ assert.ok((await box()).w/start.w>.3,'Plus button must recover from world scale');
+ console.log('PASS: Turkey wheel cursor anchor, reversible zoom, pan then zoom, reset, buttons, lower-limit recovery');
+}finally{await browser.close();}
