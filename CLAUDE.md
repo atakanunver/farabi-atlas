@@ -12,7 +12,8 @@ Ortak kurallar üst dizindeki `../CLAUDE.md`'de. Ayrıntılı ürün planı `atl
   `ATLAS_STANDALONE=1`, DB `var/atlas.db`. Adres `http://farabi.local:8099/kure/`. Giriş yok; ortak tahta etkinliği.
 - Okul portalından (`okul/`, :9090, smual.app) TAMAMEN bağımsız. Portal entegrasyonu kullanıcı isteğiyle geri alındı:
   `backend.server.install`, `scripts/integrate_portal.py` eski araçlardır, yeniden UYGULAMA. Okul DB/öğrenci/XP'ye dokunulmaz.
-- Bu dizin üst `farabi` deposunda izlenmiyor (untracked); içindeki `.git/` boş, git komutları üst depoya gider.
+- Kendi git deposu: `atakanunver/farabi-atlas` (PUBLIC, dal `main`); üst `farabi` deposunda izlenmez.
+  Public olduğu için okul verisi, wiki içeriği, `var/*.db` commit'lenmez.
 - Üretime alma: ön yüz değişikliği → `npm run build` (servis `dist/`'i sunar, restart gerekmez);
   backend veya `public/data` değişikliği → build + `sudo systemctl restart farabi-atlas`.
 
