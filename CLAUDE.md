@@ -10,8 +10,13 @@ Ortak kurallar üst dizindeki `../CLAUDE.md`'de. Ayrıntılı ürün planı `atl
 ## Canlı durum
 - `farabi-atlas.service` (birim kopyası `deploy/farabi-atlas.service`) bu dizinden koşar: `0.0.0.0:8099`,
   `ATLAS_STANDALONE=1`, DB `var/atlas.db`. Adres `http://farabi.local:8099/kure/`. Giriş yok; ortak tahta etkinliği.
-- Okul portalından (`okul/`, :9090, smual.app) TAMAMEN bağımsız. Portal entegrasyonu kullanıcı isteğiyle geri alındı:
+- Portal (`okul/`, :9090, smual.app) Atlas'ı yalnız iframe ile gösterir (2026-11-04): `/ogretmen/atlas` sayfası, `okul/rotalar/atlas.py`
+  `/kure/*` ve `/api/atlas/*`'ı öğretmen girişiyle :8099'a proxy'ler. Bu yüzden frontend mutlak `/kure/` ve `/api/atlas` yollarını korumalı.
+- Bunun dışında okul portalından TAMAMEN bağımsız. Eski tam portal entegrasyonu kullanıcı isteğiyle geri alındı:
   `backend.server.install`, `scripts/integrate_portal.py` eski araçlardır, yeniden UYGULAMA. Okul DB/öğrenci/XP'ye dokunulmaz.
+  `scripts/detach_portal.py` (geri alma) ve `scripts/update_wiki.py` (wiki'ye yazar) tek seferlik, çalıştırılmış betiklerdir.
+  README'deki "Dijital Okul entegrasyonu" cümlesi bu yüzden eskidir (README yalnız Atakan isterse güncellenir).
+- `docs/` = GitHub Pages tanıtım sayfası (statik, uygulamadan bağımsız; build'e girmez).
 - Kendi git deposu: `atakanunver/farabi-atlas` (PUBLIC, dal `main`); üst `farabi` deposunda izlenmez.
   Public olduğu için okul verisi, wiki içeriği, `var/*.db` commit'lenmez.
 - Üretime alma: ön yüz değişikliği → `npm run build` (servis `dist/`'i sunar, restart gerekmez);
