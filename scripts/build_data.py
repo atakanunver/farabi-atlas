@@ -61,10 +61,13 @@ if (SOURCE/'districts.json').exists():
 for f in read('world'):
  p=f['properties']; code=p['ADM0_A3']; name=p.get('NAME_TR') or p['NAME']
  add('COUNTRY-'+code,name,'country','world',f['geometry'],iso=code,continent=p.get('CONTINENT'),aliases=[p['NAME'],p['ADMIN']])
+# places.json (sade NE) Türkçe ad taşımaz; capitals-tr.json = tam ne_10m_populated_places NAME_TR (ne_id → ad)
+capital_tr=json.loads((SOURCE/'capitals-tr.json').read_text())
 for f in read('places'):
  p=f['properties']
  if p.get('adm0cap')==1:
-  add('CAPITAL-'+str(p['ne_id']),p['name'],'capital','world',f['geometry'],countryId='COUNTRY-'+p['adm0_a3'],aliases=[p['name']])
+  tr=capital_tr.get(str(p['ne_id']),p['name']);extra={'name_en':p['name']} if tr!=p['name'] else {}
+  add('CAPITAL-'+str(p['ne_id']),tr,'capital','world',f['geometry'],countryId='COUNTRY-'+p['adm0_a3'],aliases=[p['name']],**extra)
 
 river_names={'Nile':'Nil Nehri','Amazonas':'Amazon Nehri','Amazon':'Amazon Nehri','Danube':'Tuna Nehri','Volga':'Volga Nehri','Yangtze':'Yangtze Nehri','Ganges':'Ganj Nehri','Indus':'İndus Nehri','Al Furat':'Fırat Nehri','Dicle':'Dicle Nehri','Tigris':'Dicle Nehri','Kizilirmak':'Kızılırmak','Sakarya':'Sakarya','Yesilirmak':'Yeşilırmak'}
 groups={}

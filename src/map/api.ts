@@ -1,7 +1,7 @@
 import type { Feature, Geometry, FeatureCollection } from 'geojson';
 export type RenderMode = 'FULL'|'LITE'|'SAFE';
 export type Kind='province'|'district'|'country'|'capital'|'river'|'mountain'|'lake'|'strait'|'desert'|'sea'|'island'|'peninsula';
-export type MapFeature=Feature<Geometry,{id:string;name_tr:string;type:Kind;scope:'turkey'|'world';center:[number,number];region?:string;neighbors?:string[];countryId?:string;parentId?:string;aliases?:string[]}>;
+export type MapFeature=Feature<Geometry,{id:string;name_tr:string;name_en?:string;type:Kind;scope:'turkey'|'world';center:[number,number];region?:string;neighbors?:string[];countryId?:string;parentId?:string;aliases?:string[]}>;
 export type Catalog=FeatureCollection<Geometry,MapFeature['properties']>;
 export interface FarabiMap {
  ready():Promise<void>;getRenderMode():RenderMode;

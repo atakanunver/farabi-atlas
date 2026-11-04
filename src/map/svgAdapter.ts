@@ -43,7 +43,7 @@ export class SvgAdapter extends MapBase implements FarabiMap{
   const provinces=this.catalog.features.filter(f=>f.properties.type==='province');
   if(this.globe){this.minScale=.6;this.projection=geoOrthographic().translate([w/2,h/2]).scale(Math.min(w,h)*.43*this.scaleFactor).rotate(this.rotation).clipAngle(90);const sea=el('path',{d:geoPath(this.projection)({type:'Sphere'})||'',class:'ocean-sphere'});this.svg.append(sea);}
   else{this.projection=geoMercator();if(this.scope==='turkey')this.projection.fitExtent([[w*.05,h*.15],[w*.95,h*.85]],{type:'FeatureCollection',features:provinces});else this.projection.scale(Math.min(w/6.4,h/3.5)).translate([w/2,h*.54]);const s=this.projection.scale(),t=this.projection.translate();this.minScale=this.scope==='turkey'?Math.min(w/6.4,h/3.5)/s*.6:.6;this.projection.scale(s*this.scaleFactor).translate([w/2+(t[0]-w/2)*this.scaleFactor+this.offset[0],h/2+(t[1]-h/2)*this.scaleFactor+this.offset[1]]).clipExtent([[0,0],[w,h]]);}
-  const path=geoPath(this.projection);if(this.globe)this.svg.append(el('path',{d:path(geoGraticule10())||'',class:'graticule'}));const base=this.catalog.features.filter(f=>f.properties.type==='country');const labelBoxes:{x:number;y:number;w:number}[]=[];
+  const path=geoPath(this.projection);if(this.globe)this.svg.append(el('path',{d:path(geoGraticule10())||'',class:'graticule'}));const base=this.catalog.features.filter(f=>f.properties.type==='country');const labelBoxes:{x:number;y:number;w:number;h:number}[]=[];
   const active=this.catalog.features.filter(f=>this.layers.includes(f.properties.type)&&(this.scope==='world'?f.properties.scope==='world':f.properties.scope==='turkey'||(f.properties.center[0]>24&&f.properties.center[0]<46&&f.properties.center[1]>34&&f.properties.center[1]<43)));
   const drawFeature=(f:MapFeature,interactive:boolean)=>{const p=f.properties;const isPoint=f.geometry.type==='Point';const isLine=f.geometry.type.includes('Line');let display=f;
    if(!this.globe&&p.id==='COUNTRY-ATA'){
@@ -56,7 +56,9 @@ export class SvgAdapter extends MapBase implements FarabiMap{
    if(interactive&&isLine){const hit=el('path',{d:attrs.d,class:'line-hit','data-id':p.id});this.svg.append(hit);}
    const center=(isPoint?(f.geometry as GeoJSON.Point).coordinates:p.center) as [number,number];
    if(interactive&&this.labels&&(this.globe?geoDistance(center,[-this.rotation[0],-this.rotation[1]])<1.5:true)){
-    const xy=this.projection(center);if(xy&&xy[0]>0&&xy[0]<w&&xy[1]>0&&xy[1]<h&&(active.length<100||this.scaleFactor>2||p.type==='province')){const box={x:xy[0],y:xy[1]+(isPoint?-12:3),w:p.name_tr.length*6.5};if(!labelBoxes.some(b=>Math.abs(b.x-box.x)<(b.w+box.w)/2+5&&Math.abs(b.y-box.y)<17)){labelBoxes.push(box);const t=el('text',{x:String(box.x),y:String(box.y),class:'map-label','data-id':p.id});t.textContent=p.name_tr;this.svg.append(t);}}
+    const xy=this.projection(center);if(xy&&xy[0]>0&&xy[0]<w&&xy[1]>0&&xy[1]<h&&(active.length<100||this.scaleFactor>2||p.type==='province')){const y=xy[1]+(isPoint?-12:3),en=p.name_en;const box={x:xy[0],y:en?y-6.5:y,w:Math.max(p.name_tr.length,en?.length??0)*6.5,h:en?28:15};if(!labelBoxes.some(b=>Math.abs(b.x-box.x)<(b.w+box.w)/2+5&&Math.abs(b.y-box.y)<(b.h+box.h)/2+2)){labelBoxes.push(box);const t=el('text',{x:String(box.x),y:String(y),class:'map-label','data-id':p.id});
+     // Özgün (İngilizce/yerel) ad üstte, Türkçe karşılığı altında: Prague / Prag
+     if(en){const a=el('tspan',{x:String(box.x),dy:'-13'});a.textContent=en;const b=el('tspan',{x:String(box.x),dy:'13',class:'map-label-tr'});b.textContent=p.name_tr;t.append(a,b);}else t.textContent=p.name_tr;this.svg.append(t);}}
    }
   };
   path.pointRadius(7);base.forEach(f=>drawFeature(f as MapFeature,false));
