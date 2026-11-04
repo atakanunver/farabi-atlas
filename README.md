@@ -4,6 +4,9 @@ Okulun yerel ağında çalışan Türkiye/dünya harita laboratuvarı ve beş s�
 Çalışma sırasında haricî harita API’si, CDN, çevrimiçi font veya internet bağlantısı kullanmaz.
 Tahta veya Wi-Fi istemcisinin Farabi sunucusuna erişmesi gerekir.
 
+Farabi Atlas, Şehit Murat Ustaoğlu Anadolu Lisesi tarafından yapılmıştır.
+Bu program Özlem Arslan ve Mehmet Alp Yıldız için yapılmıştır.
+
 ## Teknoloji
 
 - Arayüz ve oyun istemcisi: TypeScript, Vite.
