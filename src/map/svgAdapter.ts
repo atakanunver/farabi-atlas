@@ -7,10 +7,15 @@ export class SvgAdapter extends MapBase implements FarabiMap{
  private svg=el('svg',{'role':'img','aria-label':'Etkileşimli coğrafya haritası'});
  private projection!:GeoProjection;private observer:ResizeObserver;private globe=false;private minScale=.6;private scaleFactor=1;private offset=[0,0];private rotation:[number,number,number]=[-25,-20,0];private last:MapFeature|null=null;
  private down:{x:number;y:number;ox:number;oy:number;rot:[number,number,number];moved:boolean}|null=null;
+ private pointers=new Map<number,[number,number]>();private pinch:{x:number;y:number;d:number}|null=null;
+ private spread(){const[a,b]=[...this.pointers.values()];return{x:(a[0]+b[0])/2,y:(a[1]+b[1])/2,d:Math.hypot(a[0]-b[0],a[1]-b[1])};}
  constructor(private host:HTMLElement,catalog:Catalog){super(catalog);host.replaceChildren(this.svg);this.svg.classList.add('safe-map');this.observer=new ResizeObserver(()=>this.draw());this.observer.observe(host);
-  this.svg.addEventListener('pointerdown',e=>{this.down={x:e.clientX,y:e.clientY,ox:this.offset[0],oy:this.offset[1],rot:[...this.rotation],moved:false};});
-  this.svg.addEventListener('pointermove',e=>{if(!this.down)return;const dx=e.clientX-this.down.x,dy=e.clientY-this.down.y;if(Math.hypot(dx,dy)>10)this.down.moved=true;if(!this.down.moved)return;this.svg.setPointerCapture(e.pointerId);if(this.globe)this.rotation=[this.down.rot[0]+dx*.25,this.down.rot[1]-dy*.25,0];else this.offset=[this.down.ox+dx,this.down.oy+dy];this.draw();});
-  this.svg.addEventListener('pointerup',e=>{const d=this.down;this.down=null;if(!d||d.moved)return;const node=(e.target as Element).closest('[data-id]');if(node){const f=this.getFeature(node.getAttribute('data-id')!);if(f){this.last=f;this.emit(f);}}});
+  this.svg.addEventListener('pointerdown',e=>{this.pointers.set(e.pointerId,[e.clientX,e.clientY]);if(this.pointers.size===2){this.down=null;this.pinch=this.spread();return;}if(this.pointers.size===1)this.down={x:e.clientX,y:e.clientY,ox:this.offset[0],oy:this.offset[1],rot:[...this.rotation],moved:false};});
+  // İki parmak: parmaklar arası uzaklık oranı kadar, iki parmağın ortasına doğru yakınlaştır (pinch sonrası dokunuş seçim sayılmaz)
+  const lift=(e:PointerEvent)=>{this.pointers.delete(e.pointerId);if(this.pinch&&this.pointers.size<2){this.pinch=null;this.down=null;return true;}return false;};
+  this.svg.addEventListener('pointercancel',e=>{lift(e);this.down=null;});
+  this.svg.addEventListener('pointermove',e=>{if(this.pointers.has(e.pointerId))this.pointers.set(e.pointerId,[e.clientX,e.clientY]);if(this.pinch&&this.pointers.size>=2){const s=this.spread(),rect=this.svg.getBoundingClientRect();if(this.pinch.d>0&&s.d>0)this.zoomAt(s.d/this.pinch.d,s.x-rect.left,s.y-rect.top);this.pinch=s;return;}if(!this.down)return;const dx=e.clientX-this.down.x,dy=e.clientY-this.down.y;if(Math.hypot(dx,dy)>10)this.down.moved=true;if(!this.down.moved)return;this.svg.setPointerCapture(e.pointerId);if(this.globe)this.rotation=[this.down.rot[0]+dx*.25,this.down.rot[1]-dy*.25,0];else this.offset=[this.down.ox+dx,this.down.oy+dy];this.draw();});
+  this.svg.addEventListener('pointerup',e=>{if(lift(e))return;const d=this.down;this.down=null;if(!d||d.moved)return;const node=(e.target as Element).closest('[data-id]');if(node){const f=this.getFeature(node.getAttribute('data-id')!);if(f){this.last=f;this.emit(f);}}});
   this.svg.addEventListener('wheel',e=>{
    e.preventDefault();if(!e.deltaY)return;
    const rect=this.svg.getBoundingClientRect();
