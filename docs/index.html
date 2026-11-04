@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farabi Atlas · Akıllı tahta için harita laboratuvarı</title>
+<meta name="description" content="Okulun akıllı tahtalarında internetsiz çalışan Türkiye ve dünya harita laboratuvarı; beş sınıf oyunuyla. 81 il, 973 ilçe, 1.834 coğrafi hedef.">
+<meta property="og:title" content="Farabi Atlas">
+<meta property="og:description" content="Akıllı tahtada internetsiz çalışan harita laboratuvarı ve beş coğrafya oyunu.">
+<meta property="og:image" content="img/tahta-kure.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='18' fill='%2310191e'/%3E%3Cellipse cx='20' cy='20' rx='8' ry='17' fill='none' stroke='%23dde7d0' stroke-width='2'/%3E%3Cpath d='M3 20h34M6 12h28M6 28h28' stroke='%23dde7d0' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="sayfa">
+
+<header class="ust">
+  <a class="marka" href="#" aria-label="Farabi Atlas başa dön">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><ellipse cx="20" cy="20" rx="8" ry="17"/><path d="M3 20h34M6 12h28M6 28h28"/></svg>
+    <span>Farabi Atlas</span>
+  </a>
+  <nav aria-label="Sayfa bölümleri">
+    <a href="#dene">Bir tur dene</a>
+    <a href="#oyunlar">Oyunlar</a>
+    <a href="#katmanlar">Katmanlar</a>
+    <a href="#kurulum">Kurulum</a>
+  </nav>
+  <a class="dugme" href="https://github.com/atakanunver/farabi-atlas">Kaynak kod</a>
+</header>
+
+<section class="kahraman">
+  <div class="pafta">
+    <span class="kose k1"></span><span class="kose k2"></span>
+    <h1>Farabi<br>Atlas</h1>
+    <p class="giris">Akıllı tahtada internetsiz çalışan Türkiye ve dünya harita laboratuvarı. Beş sınıf oyunuyla, okulun kendi sunucusundan.</p>
+    <p class="kunye"><span>81 il</span><i></i><span>973 ilçe</span><i></i><span>1.834 coğrafi hedef</span><i></i><span>internet gerekmez</span></p>
+    <figure class="levha">
+      <img src="img/tahta-kure.jpg" width="1360" height="768" alt="Farabi Atlas 9-B sınıfının akıllı tahtasında açık: dünya küresi, solda harita katmanları">
+      <figcaption>9-B sınıfının tahtası, Pardus ETAP üzerinde. Ekran görüntüsü tahtanın kendisinden alındı.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="dene" class="dene">
+  <div class="dene-metin">
+    <h2>Çankırı’nın komşularını bul</h2>
+    <p>Komşunu Bul oyunundan bir tur. Haritada Çankırı’ya sınırı olan altı ile dokun. İlk denemede doğru 100 puan, bir yanlıştan sonra 50 puan.</p>
+    <p class="puan" aria-live="polite"><strong id="puan">0</strong> puan · <span id="bulunan">0</span>/6 komşu</p>
+    <ol class="komsular" id="komsular" aria-label="Bulunan komşular">
+      <li>?</li><li>?</li><li>?</li><li>?</li><li>?</li><li>?</li>
+    </ol>
+    <p class="geri" id="geri" role="status"></p>
+    <button class="dugme acik" id="yeniden" type="button">Turu yeniden başlat</button>
+    <noscript><p>Çankırı’nın komşuları: Ankara, Bolu, Çorum, Kastamonu, Karabük ve Kırıkkale.</p></noscript>
+  </div>
+  <div class="harita-kagit">
+    <svg id="harita" role="group" aria-label="Türkiye il haritası" viewBox="0 0 1000 433"></svg>
+    <p class="harita-alti">Tahtadaki oyunla aynı il sınırları: alpers/Turkey-Maps-GeoJSON, sadeleştirilmiş.</p>
+  </div>
+</section>
+
+<section id="oyunlar" class="fisler">
+  <img class="fis-zemin" src="img/anatolu-1868.jpg" width="1920" height="1352" alt="Hafız Ali Eşref’in 1868 tarihli Türkçe atlasından Anadolu paftası" loading="lazy">
+  <div class="fis-metin">
+    <h2>Beş oyun, tek harita</h2>
+    <p>1868’de Hafız Ali Eşref Türkçe atlasını kitap olarak bastırdı. Farabi Atlas aynı paftayı tahtaya taşır: öğretmen oyunu, kategoriyi, soru sayısını, süreyi ve zorluğu seçer; sınıf haritaya dokunarak cevaplar.</p>
+    <p>Puanı tahta değil sunucu hesaplar. Bir soru iki yanlışla, süre bitince ya da pas geçilince kapanır.</p>
+  </div>
+  <ul class="fis-sirasi">
+    <li class="fis" style="--b:40svh;--d:-1.5deg"><b>Türkiye’yi Bul</b><span>— — — —</span><p>Çankırı — haritada bul.</p><p>İç Anadolu Bölgesi’nde, adı “Kır” ile başlayan ili bul.</p><p>81 il, üç zorluk.</p></li>
+    <li class="fis" style="--b:34svh"><b>Komşunu Bul</b><span>— — — —</span><p>Yozgat ilinin komşularından birini seç.</p><p>Komşuluk, gerçek sınır çizgisinden hesaplanır; yalnız köşe teması sayılmaz.</p></li>
+    <li class="fis" style="--b:44svh;--d:1.2deg"><b>Bölge Avcısı</b><span>— — — —</span><p>Akdeniz Bölgesi’nden 5 farklı il seç.</p><p>Her doğru seçim haritada yeşile döner.</p><p>Yedi bölge.</p></li>
+    <li class="fis" style="--b:30svh"><b>Dünya Coğrafya Avı</b><span>— — — —</span><p>Japonya ülkesinin başkentini bul.</p><p>Ülkeler, başkentler, akarsular, dağlar, göller, çöller, denizler.</p></li>
+    <li class="fis" style="--b:38svh;--d:-1deg"><b>Tarih Rotası</b><span>— — — —</span><p>19 Mayıs 1919’da Mustafa Kemal’in ulaştığı şehri bul.</p><p>23 Nisan 1920’de TBMM’nin açıldığı ili bul.</p></li>
+    <li class="fis" style="--b:28svh"><b>Puan fişi</b><span>— — — —</span><p>İlk deneme doğru: 100</p><p>İkinci deneme doğru: 50</p><p>Kalan süre: en çok +50</p><p>Seri: en çok +50</p></li>
+  </ul>
+</section>
+
+<section id="katmanlar" class="menu-alani">
+  <div class="menu-kagit">
+    <h2>Haritada neler var</h2>
+    <div class="grup">
+      <h3>Türkiye</h3>
+      <dl>
+        <div><dt>İller</dt><dd>81</dd><p>Sınırları ve komşulukları; yedi coğrafi bölge.</p></div>
+        <div><dt>İlçeler</dt><dd>973</dd><p>2021 sınırları, her biri kendi iline bağlı.</p></div>
+      </dl>
+    </div>
+    <div class="grup">
+      <h3>Dünya</h3>
+      <dl>
+        <div><dt>Ülkeler</dt><dd>242</dd><p>Küçük ülkeler yakınlaştırılarak seçilir.</p></div>
+        <div><dt>Başkentler</dt><dd>200</dd></div>
+        <div><dt>Deniz ve okyanuslar</dt><dd>74</dd></div>
+      </dl>
+    </div>
+    <div class="grup">
+      <h3>Doğal unsurlar</h3>
+      <dl>
+        <div><dt>Dağlar</dt><dd>79</dd></div>
+        <div><dt>Akarsular</dt><dd>60</dd></div>
+        <div><dt>Göller</dt><dd>50</dd></div>
+        <div><dt>Çöller</dt><dd>25</dd></div>
+        <div><dt>Adalar</dt><dd>20</dd></div>
+        <div><dt>Boğaz ve kanallar</dt><dd>20</dd><p>Hayalî çizgi yerine seçilebilir bir merkez noktası.</p></div>
+        <div><dt>Yarımadalar</dt><dd>10</dd></div>
+      </dl>
+    </div>
+    <p class="toplam"><span>Toplam hedef</span><strong>1.834</strong></p>
+  </div>
+  <figure class="menu-levha">
+    <img src="img/tahta-katmanlar.jpg" width="1280" height="536" alt="12-B tahtasında Atlas: Doğu Akdeniz, dağlar kahverengi, akarsular mavi, boğazlar nokta olarak işaretli" loading="lazy">
+    <figcaption>12-B’nin tahtasında beş katman birden: ülkeler, akarsular, dağlar, göller, boğazlar.</figcaption>
+  </figure>
+</section>
+
+<section class="akis" aria-labelledby="akis-baslik">
+  <div class="akis-ust">
+    <h2 id="akis-baslik">Bir ders saatinde</h2>
+    <div class="akis-dugmeler">
+      <button type="button" id="geri-kay" aria-label="Önceki an"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button type="button" id="ileri-kay" aria-label="Sonraki an"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div class="akis-cubuk"><span id="akis-ilerleme"></span></div>
+  <ol class="akis-sira" id="akis-sira" tabindex="0" aria-label="Bir ders saatinin anları">
+    <li style="--bos:96px"><h3>Önce harita</h3><p>Öğretmen Türkiye ile dünya arasında geçer, katmanları açar, bir ile dokunur.</p><img src="img/turkiye.jpg" width="1440" height="900" alt="Türkiye atlası yakınlaştırılmış; Çankırı seçili" loading="lazy" style="--x:38%"></li>
+    <li style="--bos:136px"><h3>Sonra soru</h3><p>Oyun seçilir, soru tahtanın üstüne gelir: “Yozgat ilinin komşularından birini seç.”</p><img src="img/komsu-yanlis.jpg" width="1440" height="900" alt="Komşunu Bul sorusu ekranda" loading="lazy" style="--x:48%"></li>
+    <li style="--bos:84px"><h3>Doğru dokunuş</h3><p>Doğru il yeşile döner, kalan süre ve seri puana eklenir.</p><img src="img/komsu-dogru.jpg" width="1440" height="900" alt="Doğru seçim yeşil, sağ panelde +97 puan" loading="lazy" style="--x:70%"></li>
+    <li style="--bos:120px"><h3>Bir bölge</h3><p>Bölge Avcısı’nda beş il tek soruda toplanır; her seçim sayılır.</p><img src="img/bolge.jpg" width="1440" height="900" alt="Akdeniz Bölgesi sorusu, üç il seçilmiş" loading="lazy" style="--x:40%"></li>
+    <li style="--bos:100px"><h3>Dünyaya açılış</h3><p>Aynı akış ülkeler, başkentler ve doğal unsurlar için.</p><img src="img/dunya.jpg" width="1440" height="900" alt="Dünya Coğrafya Avı başkent sorusu" loading="lazy" style="--x:50%"></li>
+    <li style="--bos:140px"><h3>Turun sonu</h3><p>Her sorunun puanı tek tabloda. Sonuç okul sunucusunda kalır.</p><img src="img/sonuc.jpg" width="1440" height="900" alt="Keşfin sonucu: 749 puan, beş doğru görev" loading="lazy" style="--x:42%"></li>
+    <li style="--bos:90px"><h3>Telefonda da</h3><p>Okul ağındaki bir telefon ya da tablet aynı adresi açar.</p><img src="img/telefon.jpg" width="390" height="844" alt="Atlas telefon genişliğinde" loading="lazy" style="--x:50%"></li>
+  </ol>
+</section>
+
+<section class="mektup-alani" aria-labelledby="mektup-baslik">
+  <div class="mektup">
+    <h2 id="mektup-baslik" class="gizli">Neden Farabi Atlas</h2>
+    <svg class="muhur" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><ellipse cx="20" cy="20" rx="8" ry="17"/><path d="M3 20h34M6 12h28M6 28h28"/></svg>
+    <p>Tahtalarımız i3 işlemcili, 3,8 GB belleklidir; bir kısmının ekran kartı yoktur. İnternet okulda her zaman güvenilir değildir. Harita uygulamalarının çoğu bu iki koşuldan birinde takılıyordu.</p>
+    <p>Farabi Atlas bu yüzden okulun kendi sunucusundan çalışır. Haritaların, soruların ve sonuçların hepsi yerel ağdadır; açılışta ekran kartı gerektirmeyen bir küre çizilir, güçlü cihazda WebGL motoruna geçilebilir.</p>
+    <p>Öğrenci adı, numarası ya da hesabı tutulmaz. Tahta ortak bir etkinlik ekranıdır: sınıf birlikte oynar, sonuç sınıfındır.</p>
+    <p>Kaynak kod ve harita verisi herkese açıktır. Kendi okulunuzun sunucusunda kurabilirsiniz.</p>
+    <p class="imza">Atakan Ünver<span>Farabi’yi hazırlayan</span></p>
+  </div>
+  <a class="koparma" href="https://github.com/atakanunver/farabi-atlas">github.com/atakanunver/farabi-atlas</a>
+</section>
+
+<section id="kurulum" class="sss">
+  <div class="sss-metin">
+    <h2>Kurulum ve sorular</h2>
+    <ul class="olgular">
+      <li>Sunucu: Python ve FastAPI, kendi SQLite dosyası</li>
+      <li>Arayüz: TypeScript ve Vite, D3 küre, MapLibre</li>
+      <li>Tahtada: yalnızca bir tarayıcı, adres <code>/kure/</code></li>
+    </ul>
+    <details>
+      <summary>İnternet bağlantısı gerekir mi?</summary>
+      <p>Hayır. Harita dosyaları, sorular ve yazı tipleri sunucudadır; çalışırken hiçbir dış adrese istek gitmez. İnternet yalnızca geliştirme ve ilk veri indirme için gerekir.</p>
+    </details>
+    <details>
+      <summary>Ekran kartı olmayan tahtada çalışır mı?</summary>
+      <p>Evet. Açılış görünümü SVG küredir ve GPU istemez. WebGL motoru ayrıca seçilebilir; hata verirse uygulama sade haritaya döner.</p>
+    </details>
+    <details>
+      <summary>Öğrenci verisi tutuluyor mu?</summary>
+      <p>Hayır. Yalnızca oyun oturumu, sınıf etkinliği adı ve puan kaydedilir. Okulun öğrenci, öğretmen ya da ödül kayıtlarına erişilmez.</p>
+    </details>
+    <details>
+      <summary>Puanı kim hesaplar?</summary>
+      <p>Sunucu. Tahta yalnızca dokunulan yeri gönderir; hedefler tahtaya hiç gösterilmez, böylece puan elle değiştirilemez.</p>
+    </details>
+    <details>
+      <summary>Harita verileri nereden geliyor?</summary>
+      <p>Dünya ve doğal unsurlar Natural Earth (kamu malı), iller alpers/Turkey-Maps-GeoJSON (Apache-2.0), ilçeler geoBoundaries TUR ADM2 2021 (ODbL-1.0). Kaynakların SHA-256 değerleri depodaki manifest dosyasındadır.</p>
+    </details>
+    <details>
+      <summary>Kendi okulumda nasıl kurarım?</summary>
+      <pre><code>npm ci
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-build.txt
+npm run build
+ATLAS_STANDALONE=1 ATLAS_DB=var/atlas.db \
+  .venv/bin/uvicorn backend.server:standalone \
+  --factory --host 0.0.0.0 --port 8099</code></pre>
+    </details>
+    <a class="dugme koyu" href="https://github.com/atakanunver/farabi-atlas#readme">Kurulum belgesini aç</a>
+  </div>
+  <div class="sss-gorsel">
+    <img class="uzun" src="img/tahta-kure.jpg" width="1360" height="768" alt="Tahtadaki Atlas küresi, yakın görünüm" loading="lazy">
+    <img class="kare" src="img/telefon.jpg" width="390" height="844" alt="Telefon genişliğinde Atlas" loading="lazy">
+  </div>
+</section>
+
+</main>
+
+<footer class="arka">
+  <div class="arka-kart">
+    <div class="arka-sol">
+      <h2>Haritada görüşelim</h2>
+      <p>Farabi Atlas, Şehit Murat Ustaoğlu Anadolu Lisesi’nin akıllı tahtaları için yazıldı ve okulun Farabi sunucusunda çalışıyor.</p>
+      <p>Aynı sunucudaki sesli ders asistanı Farabi’nin tanıtımı da ayrı bir sayfada.</p>
+    </div>
+    <div class="arka-sag">
+      <img class="pul" src="img/anatolu-1868.jpg" width="1920" height="1352" alt="1868 Anadolu paftasından ayrıntı" loading="lazy">
+      <ul>
+        <li><a href="https://github.com/atakanunver/farabi-atlas">Kaynak kod · GitHub</a></li>
+        <li><a href="https://atakanunver.github.io/farabi-tahta/">Farabi Akıllı Tahta</a></li>
+        <li><a href="https://atakanunver.github.io/smual-tanitim/">Okulun dijital portalı</a></li>
+        <li><a href="https://kursunlual.meb.k12.tr/">Okulun web sitesi</a></li>
+      </ul>
+    </div>
+    <p class="kunye-alt">Anadolu paftası: Hafız Ali Eşref, 1868, kamu malı, Wikimedia Commons (David Rumsey Map Collection). Harita verisi: Natural Earth, alpers/Turkey-Maps-GeoJSON, geoBoundaries. Ekran görüntüleri: Farabi Atlas, 2026.</p>
+  </div>
+</footer>
+
+<script src="turkiye.js"></script>
+<script src="sayfa.js"></script>
+</body>
+</html>
